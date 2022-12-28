@@ -9,7 +9,7 @@ github_URL = "github.com/miladhzzz/milx-cloud-init/shipper"
 owner="milad hosseini"
 
 [app.services]
-port = "8551"
+port = "8555"
 
 [app.build]
 build = "yes"

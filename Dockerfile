@@ -22,7 +22,6 @@ COPY --from=build /app/main .
 
 RUN chmod +x ./main
 
-EXPOSE 3000
-EXPOSE 5008
+EXPOSE 8555
 
 CMD [ "./main" ]
