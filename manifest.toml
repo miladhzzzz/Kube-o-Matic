@@ -3,9 +3,9 @@ title = "shipper"
 [app]
 version="v0"
 language="go"
-name = "shipper"
+name = "kubectl-api"
 description = "a tool to deploy services to k8s cloud or in-house and monitor/control kubernetes"
-github_URL = "github.com/miladhzzz/milx-cloud-init/shipper"
+github_URL = "github.com/miladhzzz/kubectl-api"
 owner="milad hosseini"
 
 [app.services]
@@ -24,8 +24,3 @@ replica= "3"
 monitor= "yes"
 
 [dependencis]
-service = "theye"
-database = "mongoDB"
-kafka = "yes"
-gRPC = "yes"
-http= "no"

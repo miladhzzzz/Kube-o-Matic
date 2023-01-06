@@ -3,22 +3,17 @@ RUN apk add build-base
 
 WORKDIR /app
 
-COPY go.mod .
-COPY go.sum .
+COPY . .
+
 RUN go mod download
 
-COPY /cmd/main.go .
-
-RUN go build -o main
-
-#EXPOSE 3000
-#cmd ["/bin/sh"]
+RUN cd cmd && go build -o main
 
 FROM alpine:latest as server
 
 WORKDIR /app
 
-COPY --from=build /app/main .
+COPY --from=build /app/cmd/main .
 
 RUN chmod +x ./main
 
