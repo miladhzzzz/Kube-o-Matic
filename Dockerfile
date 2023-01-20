@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod init
+RUN go mod download
 
 RUN cd cmd && go build -o main
 
