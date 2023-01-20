@@ -3,7 +3,7 @@ RUN apk add build-base
 
 WORKDIR /app
 
-COPY . .
+ADD . .
 
 RUN go mod download
 
