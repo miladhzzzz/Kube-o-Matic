@@ -40,6 +40,7 @@ func getPods(ns string) (*vx.PodList, error) {
 	}
 
 	return pods, nil
+	//TEST CI
 
 }
 
