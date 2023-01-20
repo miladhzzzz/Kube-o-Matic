@@ -5,6 +5,8 @@ WORKDIR /app
 
 ADD . .
 
+RUN ls
+
 RUN go mod download
 
 RUN cd cmd && go build -o main
