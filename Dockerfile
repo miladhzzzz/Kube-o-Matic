@@ -3,9 +3,7 @@ RUN apk add build-base
 
 WORKDIR /app
 
-ADD . .
-
-RUN ls
+COPY ./kubectl-api .
 
 RUN go mod download
 
