@@ -1,64 +1,69 @@
 package main
 
 import (
-	"context"
-	vx "k8s.io/api/core/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
+	"os"
+	"log"
 	"net/http"
+
+	"github.com/miladhzzzz/kube-o-matic/internal/k8s"
 
 	"github.com/gin-gonic/gin"
 )
 
-func kubectl(KubeConfigPath string) (*kubernetes.Clientset, error) {
-
-	kubeConfigPath := "../config/kube/k3s.yaml"
-
-	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
-
-	if err != nil {
-		return nil, err
-	}
-
-	clientset, err := kubernetes.NewForConfig(kubeConfig)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return clientset, nil
-}
-
-func getPods(ns string) (*vx.PodList, error) {
-	clientset, err := kubectl("")
-
-	pods, err := clientset.CoreV1().Pods(ns).List(context.Background(), v1.ListOptions{})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return pods, nil
-	//TEST CI
-
-}
 
 func main() {
+	// starting gin server
+	startGinServer()
+	
+}
 
-	r := gin.Default()
+func startGinServer() {
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	logFile, _ := os.Create("kubeomatic-service-http.log")
 
-	r.GET("/pods/:ns", func(c *gin.Context) {
+	server := gin.Default()
 
-		pods, err := getPods(c.Param("ns"))
+	router := server.Group("")
+
+	router.Use(gin.LoggerWithWriter(logFile))
+
+	server.MaxMultipartMemory = 8 << 20 // 8 MiB
+
+	router.POST("/upload", func(c *gin.Context) {
+		// single file
+		file, _ := c.FormFile("file")
+		log.Println(file.Filename)
+
+		folder := "/kubeconfig" + "/" + file.Filename
+		// Upload the file to specific dst.
+		err := c.SaveUploadedFile(file, folder)
 
 		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"Upload was successfull": file.Filename})
+	})
+	
+		// @Summary Get pods in a namespace
+		// @Description Get pods in a namespace
+		// @Tags Pods
+		// @Accept json
+		// @Produce json
+		// @Param ns path string true "Namespace"
+		// @Success 200 {array} Pod
+		// @Failure 400 {object} ErrorResponse
+		// @Failure 500 {object} ErrorResponse
+		// @Router /pods/{ns} [get]
+
+
+	router.GET("/pods/:ns", func(c *gin.Context) {
+		
+		pods, err := k8s.GetPods(c.Param("ns"))
+
+		if err != nil {
+			log.Printf("couldnt get pods: %v", err)
 			c.JSON(http.StatusOK, err)
 			return
 		}
@@ -67,5 +72,13 @@ func main() {
 
 	})
 
-	r.Run(":8555") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
+
+
+	log.Fatal(server.Run(":8555"))
+
 }

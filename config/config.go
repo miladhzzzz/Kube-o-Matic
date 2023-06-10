@@ -1,5 +1,1 @@
 package config
-
-func main () {
-	
-}
