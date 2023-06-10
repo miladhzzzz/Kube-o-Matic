@@ -1,11 +1,11 @@
-title = "shipper"
+title = "Kube-o-Matic"
 
 [app]
-version="v0"
+version="v1alpha1"
 language="go"
-name = "kubectl-api"
+name = "kube-o-matic"
 description = "a tool to deploy services to k8s cloud or in-house and monitor/control kubernetes"
-github_URL = "github.com/miladhzzz/kubectl-api"
+github_URL = "github.com/miladhzzz/kube-o-matic"
 owner="milad hosseini"
 
 [app.services]
