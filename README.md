@@ -37,3 +37,23 @@ kubectl is basically a wrapper for k8s.io/client-go. so client-go is the actuall
 
 #### monitoring!
 - you can easily set up jobs and watches and see the results in JSON!(Come on now i am not a Frontend Developer!)
+
+## Usage
+**To Use Kube-o-Matic please follow the instructions bellow:**
+
+```shell
+# Clone The repository
+git clone https://github.com/miladhzzzz/Kube-o-Matic.git
+
+# Change Directory into it
+cd Kube-o-Matic
+
+# Use Makefile to build and run a docker image
+make docker
+
+# after we are finished with building and running the image we need to upload kubeconfig
+cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c <example> -a <http://localhost:8555>
+```
+Theres a upload-kubeconfig.sh file in /hack directory which exports your kubernetes configuration based on the context you provided otherwise it will use default and uploads the config file to Kube-o-Matic.
+
+**Please note that you need to change -c persys to provide your own context and api address**
