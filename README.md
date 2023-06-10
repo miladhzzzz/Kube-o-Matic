@@ -9,7 +9,7 @@ Open Source solution to automate use of kubectl!
 ## What?
 as everyone knows by now! in order to communicate with a kubernetes cluster you need to use a tool called "Kubectl".theres a bunch of commands that you can use to interact with your cluster!
 
-this tool provides a layer on top of k8s.io/client-go to automate "kubectl"!
+**Kube-o-Matic!** provides a layer on top of k8s.io/client-go to automate "kubectl"!
 we expose an HTTP REST API to bring kubectl to your browser!
 
 
