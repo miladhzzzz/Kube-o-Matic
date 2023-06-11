@@ -31,12 +31,24 @@ func startGinServer() {
 
 	router.POST("/upload", func(c *gin.Context) {
 		// single file
-		file, _ := c.FormFile("file")
+		file, err := c.FormFile("file")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		log.Println(file.Filename)
 
-		folder := "/kubeconfig" + "/" + file.Filename
+		folder := "/kubeconfig/" + file.Filename
+
+		err = os.MkdirAll(folder, 0755)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
 		// Upload the file to specific dst.
-		err := c.SaveUploadedFile(file, folder)
+		err = c.SaveUploadedFile(file, folder)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err)
@@ -45,18 +57,6 @@ func startGinServer() {
 
 		c.JSON(http.StatusOK, gin.H{"Upload was successfull": file.Filename})
 	})
-	
-		// @Summary Get pods in a namespace
-		// @Description Get pods in a namespace
-		// @Tags Pods
-		// @Accept json
-		// @Produce json
-		// @Param ns path string true "Namespace"
-		// @Success 200 {array} Pod
-		// @Failure 400 {object} ErrorResponse
-		// @Failure 500 {object} ErrorResponse
-		// @Router /pods/{ns} [get]
-
 
 	router.GET("/pods/:ns", func(c *gin.Context) {
 		
