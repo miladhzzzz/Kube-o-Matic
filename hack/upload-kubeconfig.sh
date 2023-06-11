@@ -3,7 +3,6 @@
 # Set default values
 context="default"
 api_server_url=""
-kubeconfig_file="${context}-kube.yaml"
 
 # Parse command-line options
 while getopts ":c:a:k:" opt; do
@@ -28,6 +27,8 @@ while getopts ":c:a:k:" opt; do
   esac
 done
 
+kubeconfig_file="${context}-kubeconfig.yaml"
+
 # Check if API server URL is provided
 if [ -z "$api_server_url" ]; then
   echo "API server URL is required."
@@ -36,9 +37,11 @@ fi
 
 # Get kubeconfig from context
 kubectl config use-context $context
-kubectl config view --minify --output yaml > $kubeconfig_file
+kubectl config view --minify --flatten --context=$context > $kubeconfig_file
 
 # Upload kubeconfig to API server
-curl -X POST -H "Content-Type: application/yaml" --data-binary @$kubeconfig_file $api_server_url/upload
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@$kubeconfig_file" $api_server_url/upload
+
+rm $kubeconfig_file
 
 echo "Kubeconfig uploaded successfully!"
