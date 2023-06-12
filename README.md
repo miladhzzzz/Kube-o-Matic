@@ -46,7 +46,7 @@ kubectl is basically a wrapper for k8s.io/client-go. so client-go is the actuall
 using make you can build and run the project binary on linux.
 ```shell
 # build go and output to /bin
-make docker
+make build
 # run the binary
 make run
 ```
