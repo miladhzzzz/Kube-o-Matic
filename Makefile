@@ -5,6 +5,12 @@ build:
 	cd cmd && go build -o ../bin/kubeomatic
 	@echo "Build Done!"
 
+## run: this will run the code
+run:
+	@echo "Running Kube-o-Matic..."
+	cd bin && chmod +x kubeomatic && ./kubeomatic
+	@echo "Done!"
+	
 ## swag: makes docs/ swagger ui
 swag:
 	@echo "Making swagger UI"
@@ -19,7 +25,7 @@ docker:
 	@echo "Running docker image"
 	docker run -p 8555:8555 -d --name kube-o-matic kube-o-matic:latest
 	@echo "Docker Run complete"
-	
+
 ## down: stops the docker container
 down:
 	@echo "Stoping container..."
