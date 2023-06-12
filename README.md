@@ -38,8 +38,22 @@ kubectl is basically a wrapper for k8s.io/client-go. so client-go is the actuall
 #### monitoring!
 - you can easily set up jobs and watches and see the results in JSON!(Come on now i am not a Frontend Developer!)
 
-## Usage
-**To Use Kube-o-Matic please follow the instructions bellow:**
+## Installation
+
+**To install Kube-o-Matic please follow the instructions bellow:**
+
+#### Build
+using make you can build and run the project binary on linux.
+```shell
+# build go and output to /bin
+make docker
+# run the binary
+make run
+```
+
+#### Run in Docker
+
+This script will build a docker image then run it and inject your kubeconfig with /hack/upload-kubeconfig.sh.
 
 ```shell
 # Clone The repository
@@ -51,9 +65,20 @@ cd Kube-o-Matic
 # Use Makefile to build and run a docker image
 make docker
 
+## INJECTING CONFIG
+
 # after we are finished with building and running the image we need to upload kubeconfig
 cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c <example> -a <http://localhost:8555>
-```
-Theres a upload-kubeconfig.sh file in /hack directory which exports your kubernetes configuration based on the context you provided otherwise it will use default and uploads the config file to Kube-o-Matic.
 
-**Please note that you need to change -c persys to provide your own context and api address**
+# Example ./upload-kubeconfig.sh -c kind -a http://localhost8555
+
+```
+
+#### Manual Config injection
+
+- Theres a upload-kubeconfig.sh file in /hack directory which exports your kubernetes configuration based on the context you provided otherwise it will use default and uploads the config file to Kube-o-Matic.
+
+- if your are on windows try this:
+```shell
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfig" http://localhost/upload
+```
