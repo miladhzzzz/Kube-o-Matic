@@ -46,7 +46,8 @@ kubectl is basically a wrapper for k8s.io/client-go. so client-go is the actuall
 **To install Kube-o-Matic please follow the instructions bellow:**
 
 #### Build
-using make you can build and run the project binary on linux.
+using make you can build and run the project binaries.
+
 ```shell
 # build go and output to /bin
 make build
@@ -56,7 +57,21 @@ make run
 
 #### Run in Docker
 
-This script will build a docker image then run it and inject your kubeconfig with /hack/upload-kubeconfig.sh.
+- Download from **Github packages** and run in docker.
+
+```shell
+# If you have the repository cloned:
+make PullAndRun
+
+# IF you dont have the repository localy run :
+docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic
+docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic
+
+# DONT FORGET TO UPLOAD YOUR KUBECONFIG!
+
+```
+
+- This script will build a docker image then run it and inject your kubeconfig with /hack/upload-kubeconfig.sh.
 
 ```shell
 # Clone The repository
@@ -66,7 +81,7 @@ git clone https://github.com/miladhzzzz/Kube-o-Matic.git
 cd Kube-o-Matic
 
 # Use Makefile to build and run a docker image
-make docker
+make BuildAndRun
 
 ## INJECTING CONFIG
 
