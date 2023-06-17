@@ -119,7 +119,7 @@ func (kc *KubeController) HookDeploy(dir string) error {
 			return err
 		}
 
-		err = json.Unmarshal(data, deploy)
+		err = json.Unmarshal(data, &deploy)
 
 		if err != nil {
 			log.Printf("Failed To deserialize data: %v", err)
