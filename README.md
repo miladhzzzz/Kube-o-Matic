@@ -82,3 +82,22 @@ cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c <example
 ```shell
 curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfig" http://localhost/upload
 ```
+
+## Usage
+
+### Setting up GitOps for kubeomatic
+- To setup our GitOps CD pipeline you need to head to your github repository : Settings > Webhook > Add Webhook and provide the following parameters:
+    1. in order for github to be able to reach our CD we need a "Public IP Adrress". if you are running this localy use (Ngrok)[https://github.com/ngrok] and make sure you have it installed. provide the Ngrok URL in the webhook settings.
+
+    2. webhook secret is basically preventing anyone else to activate your CD so you have to provide a good one and then use http://localhost:8555/webhook/secret/<YOUR SECRET HERE> to set the secret in your CD.
+
+    3. make sure all of your manifests are in the root directory.
+
+    4. Push Changes To your Repo and they will get deployed eachtime you update the code!
+
+### Kubectl API
+
+- you can use Postman , CURL, Browser REST Clients , or any other REST Client to communicate and monitor your kubernetes cluster.
+
+### Endpoints
+
