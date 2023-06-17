@@ -15,6 +15,10 @@ import (
 var (
 	KubeController controllers.KubeController
 	KubeRouteController routes.KubeRouteController
+
+	HookController controllers.HookController
+	HookRouteController routes.HookRouteController
+
 	serviceName = "kubeomatic"
 	server *gin.Engine
 )
@@ -24,6 +28,10 @@ func init () {
 	KubeController = controllers.NewKubeController()
 
 	KubeRouteController = routes.NewKubeRouteController(KubeController)
+
+	HookController = controllers.NewHookcontroller(KubeController)
+
+	HookRouteController = routes.NewHookRouteController(HookController)
 
 	logFile, _ := os.Create("kubeomatic-service-http.log")
 
@@ -58,6 +66,8 @@ func startGinServer() {
 	})
 
 	KubeRouteController.KubeRoute(router)
+
+	HookRouteController.HookRoute(router)
 
 	log.Fatal(server.Run(":8555"))
 
