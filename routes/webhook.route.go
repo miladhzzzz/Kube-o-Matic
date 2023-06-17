@@ -15,9 +15,10 @@ func NewHookRouteController(HookController controllers.HookController) HookRoute
 }
 
 func (rc *HookRouteController) HookRoute(rg *gin.RouterGroup) {
-	
+
 	router := rg.Group("")
 
 	router.POST("/webhook", rc.hookController.HookHandler())
 
+	router.GET("/webhook/secret/:secret", rc.hookController.SetSecret())
 }
