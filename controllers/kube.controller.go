@@ -3,13 +3,14 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	vx "k8s.io/api/core/v1"
+	// vx "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	conf "k8s.io/client-go/applyconfigurations/apps/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -74,38 +75,57 @@ func kubectl() (*kubernetes.Clientset, error) {
 }
 
 func (kc *KubeController) Deploy() gin.HandlerFunc {
+	
+    return func(ctx *gin.Context) {
+        ns := ctx.Param("ns")
 
+        // Get the YAML file from the request body
+        var deployment conf.DeploymentApplyConfiguration
+
+        if err := ctx.BindJSON(&deployment); err!= nil {
+            ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            return
+        }
+
+        // Create the Kubernetes client set
+        clientSet, err := kubectl()
+        if err!= nil {
+            ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+		
+        // Deploy the deployment to Kubernetes
+        if _, err := clientSet.AppsV1().Deployments(ns).Apply(context.Background(), &deployment, v1.ApplyOptions{}); err!= nil {
+            ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+            return
+        }
+
+        ctx.JSON(http.StatusOK, gin.H{"message": "Deployment created successfully"})
+    }
+}
+
+func (kc *KubeController) GetPods() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
 
-	
 		ns := ctx.Param("ns")
 
-		clientSet, err := kubectl()
+		clientset, err := kubectl()
 
 		if err != nil {
-			log.Println(ns)
+			ctx.JSON(http.StatusBadRequest, err)
+			return
 		}
 
-		// clientSet.AppsV1().Deployments(ns).Apply(context.Background(), )
+		pods, err := clientset.CoreV1().Pods(ns).List(context.Background(), v1.ListOptions{})
 
-		log.Println(clientSet)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		ctx.JSON(http.StatusOK, pods)
 
 	}
-}
-
-func (kc *KubeController) GetPods(ns string) (*vx.PodList, error) {
-	clientset, err := kubectl()
-
-	if err != nil {
-		return nil, err
-	}
-
-	pods, err := clientset.CoreV1().Pods(ns).List(context.Background(), v1.ListOptions{})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return pods, nil
+	
 }
