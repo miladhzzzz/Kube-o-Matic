@@ -1,14 +1,36 @@
 package main
 
 import (
-	"os"
 	"log"
 	"net/http"
+	"os"
 
-	"github.com/miladhzzzz/kube-o-matic/internal/k8s"
+	"github.com/gin-contrib/cors"
+	"github.com/miladhzzzz/kube-o-matic/controllers"
+	"github.com/miladhzzzz/kube-o-matic/routes"
 
 	"github.com/gin-gonic/gin"
 )
+
+var (
+	KubeController controllers.KubeController
+	KubeRouteController routes.KubeRouteController
+	serviceName = "kubeomatic"
+	server *gin.Engine
+)
+
+func init () {
+
+	KubeController = controllers.NewKubeController()
+
+	KubeRouteController = routes.NewKubeRouteController(KubeController)
+
+	logFile, _ := os.Create("kubeomatic-service-http.log")
+
+	server = gin.Default()
+	server.Use(gin.LoggerWithWriter(logFile))
+
+}
 
 
 func main() {
@@ -19,65 +41,23 @@ func main() {
 
 func startGinServer() {
 
-	logFile, _ := os.Create("kubeomatic-service-http.log")
-
-	server := gin.Default()
-
 	router := server.Group("")
-
-	router.Use(gin.LoggerWithWriter(logFile))
 
 	server.MaxMultipartMemory = 8 << 20 // 8 MiB
 
-	router.POST("/upload", func(c *gin.Context) {
-		// single file
-		file, err := c.FormFile("file")
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			return
-		}
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:8555"}
+	corsConfig.AllowCredentials = true
 
-		log.Println(file.Filename)
+	server.Use(cors.New(corsConfig))
 
-		folder := "/kubeconfig/" + file.Filename
+	// server.Use(otelgin.Middleware(serviceName))
 
-		err = os.MkdirAll(folder, 0755)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			return
-		}
-
-		// Upload the file to specific dst.
-		err = c.SaveUploadedFile(file, folder)
-
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"Upload was successfull": file.Filename})
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "value"})
 	})
 
-	router.GET("/pods/:ns", func(c *gin.Context) {
-		
-		pods, err := k8s.GetPods(c.Param("ns"))
-
-		if err != nil {
-			log.Printf("couldnt get pods: %v", err)
-			c.JSON(http.StatusOK, err)
-			return
-		}
-
-		c.JSON(http.StatusOK, pods.Items)
-
-	})
-
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
+	KubeRouteController.KubeRoute(router)
 
 	log.Fatal(server.Run(":8555"))
 

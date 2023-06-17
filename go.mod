@@ -3,6 +3,7 @@ module github.com/miladhzzzz/kube-o-matic
 go 1.20
 
 require (
+	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	k8s.io/api v0.25.4
 	k8s.io/apimachinery v0.25.4
