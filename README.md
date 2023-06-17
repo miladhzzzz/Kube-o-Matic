@@ -26,11 +26,14 @@ kubectl is basically a wrapper for k8s.io/client-go. so client-go is the actuall
 #### GitOps / CD
 - as the first feature that came to mind was parsing webhooks from github to watch a set of manifests and if changed deploy them!
 
+#### Multiple Cluster Management / Automation !
+- you can have multiple clusters setup and add automation to deploy accross all of them!
+
 #### GitHub Deployer Robot!
 - theres a github robot you can use to check your manifests / automate other tasks right from the api no coding neded!
 
 #### kubectl in a browser!
-- so you can use the swagger UI to easily interact with the your kubernetes cluster
+- so you can use the swagger UI / Any REST Client to easily interact with your kubernetes cluster.
 
 #### dynamic kubeconfig loading!
 - you can import and inject your kube config in a bunch of ways that we'll discuss in depth. keep on reading!
