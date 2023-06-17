@@ -103,24 +103,9 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfi
 
 | Endpoint | Method | Description | Example |
 | --- | --- | --- | --- |
-| / | GET | Returns a success message and a value | curl http://localhost:8555/ |
-
-| /kube | GET | Returns a list of all Kubernetes clusters | curl http://localhost:8555/kube |
-
-| /kube/:cluster | GET | Returns information about a specific Kubernetes cluster | curl http://localhost:8555/kube/my-cluster |
-| /kube/:cluster/pods | GET | Returns a list of all pods in a specific Kubernetes cluster | curl http://localhost:8555/kube/my-cluster/pods |
-| /kube/:cluster/deployments | GET | Returns a list of all deployments in a specific Kubernetes cluster | curl http://localhost:8555/kube/my-cluster/deployments |
-| /kube/:cluster/replicasets | GET | Returns a list of all replicasets in a specific Kubernetes cluster | 
-curl http://localhost:8555/kube/my-cluster/replicasets
- |
-| /kube/:cluster/nodes | GET | Returns a list of all nodes in a specific Kubernetes cluster | 
-curl http://localhost:8555/kube/my-cluster/nodes
- |
-| /kube/:cluster/services | GET | Returns a list of all services in a specific Kubernetes cluster | 
-curl http://localhost:8555/kube/my-cluster/services
- |
-| /kube/:cluster/events | GET | Returns a list of all events in a specific Kubernetes cluster | 
-curl http://localhost:8555/kube/my-cluster/events
- |
-| /hooks | POST | Receives a webhook and processes it | 
-curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks
+| /kube/:cluster/deployments | GET | Returns a list of all deployments in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/deployments` |
+| /kube/:cluster/replicasets | GET | Returns a list of all replicasets in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/replicasets` |
+| /kube/:cluster/nodes | GET | Returns a list of all nodes in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/nodes` |
+| /kube/:cluster/services | GET | Returns a list of all services in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/services` |
+| /kube/:cluster/events | GET | Returns a list of all events in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/events` |
+| /hooks | POST | Receives a webhook and processes it | `curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks` |
