@@ -132,4 +132,3 @@ curl http://localhost:8555/kube/my-cluster/events
  |
 | /hooks | POST | Receives a webhook and processes it | 
 curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks
- |
