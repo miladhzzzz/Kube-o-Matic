@@ -107,7 +107,7 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfi
 - To setup our GitOps CD pipeline you need to head to your github repository : Settings > Webhook > Add Webhook and provide the following parameters:
     1. in order for github to be able to reach our CD we need a "Public IP Adrress". if you are running this localy use (Ngrok)[https://github.com/ngrok] and make sure you have it installed. provide the Ngrok URL in the webhook settings.
 
-    2. webhook secret is basically preventing anyone else from activating your CD Pipeline! so you have to provide a good one and then use http://localhost:8555/webhook/secret/<YOUR SECRET HERE> to set the secret in your CD.
+    2. webhook secret is basically preventing anyone else from activating your CD Pipeline! so you have to provide a good one and then use http://localhost:8555/webhook/secret/"<YOUR SECRET HERE>" to set the secret in your CD.
 
     3. make sure all of your manifests are in the root directory.
 
