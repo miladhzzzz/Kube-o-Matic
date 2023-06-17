@@ -23,7 +23,7 @@ func NewKubeRouteController(kubeController controllers.KubeController) KubeRoute
 
 func (rc *KubeRouteController) KubeRoute(rg *gin.RouterGroup) {
 
-	router := rg.Group("/kubectl")
+	router := rg.Group("/kube")
 
 
 	rg.POST("/upload", func(c *gin.Context) {
@@ -55,6 +55,8 @@ func (rc *KubeRouteController) KubeRoute(rg *gin.RouterGroup) {
 		c.JSON(http.StatusOK, gin.H{"Upload was successfull": file.Filename})
 	})
 	
+	router.GET("/clusters", rc.kubeController.GetClusters())
+
 	router.POST("/deploy/:ns", rc.kubeController.Deploy())
 
 	router.GET("/pods/:ns", rc.kubeController.GetPods())

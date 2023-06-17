@@ -76,6 +76,21 @@ func kubectl() (*kubernetes.Clientset, error) {
 	return clientset, nil
 }
 
+func (kc *KubeController) GetClusters() gin.HandlerFunc {
+
+	return func(ctx *gin.Context) {
+		kubeconfig, err := findKubeConfig("/kubeconfig")
+
+		if err != nil {
+			log.Printf("can not find any kubeconfig files")
+			ctx.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		ctx.JSON(http.StatusOK, kubeconfig)
+	}
+}
+
 func (kc *KubeController) HookDeploy(dir string) error {
 
 	clientSet, err := kubectl()

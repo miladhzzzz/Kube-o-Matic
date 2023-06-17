@@ -2,8 +2,6 @@ package git
 
 import (
     "github.com/go-git/go-git/v5"
-    "github.com/go-git/go-git/v5/plumbing/object"
-    myhttp "github.com/go-git/go-git/v5/plumbing/transport/http"
     urlHelper "net/url"
     "os"
     "strings"
@@ -38,10 +36,6 @@ func NewGitRepository(url string, private bool, token string) (*GitRepository, e
             if err!= nil {
                 return nil, err
             }
-            err = repository.Pull(&git.PullOptions{RemoteName: "origin", Auth: &myhttp.BasicAuth{
-                Username: "abc123",
-                Password: token,
-            }})
         } else {
             repository, err = git.PlainOpen(directory)
             if err!= nil {
