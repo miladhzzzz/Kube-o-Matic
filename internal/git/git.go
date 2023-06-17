@@ -9,27 +9,24 @@ import (
     "strings"
 )
 
-type Git interface {
-    Clone(url string) (*object.Commit, string, error)
-    Fetch() error
-    Checkout(branch string) error
-    Status() (string, error)
-	Data() (*GitRepository)
-}
-
 type GitRepository struct {
-    url        string
-    directory  string
-    private    bool
-    token      string
-    repository *git.Repository
+    Url        string
+    Directory  string
+    Private    bool
+    Token      string
+    Repository *git.Repository
 }
 
 func NewGitRepository(url string, private bool, token string) (*GitRepository, error) {
+
     directory := "/git/" + ExtractUsernameRepo(url)
+
     fs, _ := os.Stat(directory)
+
     var repository *git.Repository
+
     var err error
+
     if fs == nil {
         repository, err = git.PlainClone(directory, false, &git.CloneOptions{
             URL:               url,
@@ -57,54 +54,12 @@ func NewGitRepository(url string, private bool, token string) (*GitRepository, e
         return nil, err
     }
     return &GitRepository{
-        url:        url,
-        directory:  directory,
-        private:    private,
-        token:      token,
-        repository: repository,
+        Url:        url,
+        Directory:  directory,
+        Private:    private,
+        Token:      token,
+        Repository: repository,
     }, nil
-}
-
-func (r *GitRepository) Clone() (*object.Commit, string, error) {
-    return nil, "", nil
-}
-
-func (r *GitRepository) Data() string {
-	return r.directory
-}
-
-func (r *GitRepository) Fetch() error {
-    w, err := r.repository.Worktree()
-    if err!= nil {
-        return err
-    }
-    err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-    if err!= nil && err.Error() == "already up-to-date" {
-        return nil
-    }
-    return err
-}
-
-
-func (r *GitRepository) Checkout(branch string) error {
-    head, err := r.repository.Head()
-    if err!= nil {
-        return err
-    }
-    err = r.repository.Checkout(&git.CheckoutOptions{
-        Branch: head.Name(),
-        Create: false,
-    })
-    return err
-}
-
-
-func (r *GitRepository) Status() (string, error) {
-    status, err := r.repository.Status()
-    if err!= nil {
-        return "", err
-    }
-    return status.String(), nil
 }
 
 func ExtractUsernameRepo(url string) (usernameRepo string) {

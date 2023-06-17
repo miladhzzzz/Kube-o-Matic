@@ -54,13 +54,14 @@ func(hc *HookController) HookHandler() gin.HandlerFunc {
 				c.JSON(http.StatusBadRequest, err)
 			}
 			
-			dir := repo.Data()
+			log.Println(repo.Directory)
 
-			log.Println(dir)
-
-			// hc.KubeController.Deploy()
+			if err = hc.KubeController.HookDeploy(repo.Directory); err != nil {
+				log.Printf("Deployment Failed Error: %v", err)
+			}
 
 		}
+
 		c.Status(200)
 	}
 }

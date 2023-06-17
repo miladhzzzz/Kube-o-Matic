@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -72,6 +74,53 @@ func kubectl() (*kubernetes.Clientset, error) {
 	}
 
 	return clientset, nil
+}
+
+func (kc *KubeController) HookDeploy(dir string) error {
+
+	clientSet, err := kubectl()
+
+	if err != nil {
+		log.Printf("Error: %v", err)
+		return err
+	}
+
+	deployments, err := findKubeConfig(dir)
+
+	if err != nil {
+		log.Printf("can not find kubernetes deployment yamls : %v", err)
+		return err
+	}
+
+	for _, depl := range deployments {
+		log.Println(depl)
+		
+		var deploy conf.DeploymentApplyConfiguration
+
+		data, err := os.ReadFile(depl)
+
+		if err != nil {
+			log.Printf("Failed To Read: %v", err)
+			return err
+		}
+
+		err = json.Unmarshal(data, deploy)
+
+		if err != nil {
+			log.Printf("Failed To deserialize data: %v", err)
+			return err
+		}
+
+		if _, err := clientSet.AppsV1().Deployments("default").Apply(context.Background(), &deploy, v1.ApplyOptions{}); err!= nil {
+           log.Printf("failed to deploy error: %v", err)
+		   return err
+        }
+
+
+	}
+
+
+	return nil
 }
 
 func (kc *KubeController) Deploy() gin.HandlerFunc {
