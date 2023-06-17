@@ -101,41 +101,35 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfi
 
 ### Endpoints
 
-| Endpoint | HTTP Method | Description |
-| --- | --- | --- |
-| / | GET | Returns a success message and a value |
-| /kube | GET | Returns a list of all Kubernetes clusters |
-| /kube/:cluster_id | GET | Returns the details of a specific Kubernetes cluster |
-| /kube/:cluster_id | DELETE | Deletes a specific Kubernetes cluster |
-| /kube/:cluster_id/node | GET | Returns a list of all nodes in a specific Kubernetes cluster |
-| /kube/:cluster_id/node/:node_id | GET | Returns the details of a specific node in a specific Kubernetes cluster |
-| /kube/:cluster_id/pod | GET | Returns a list of all pods in a specific Kubernetes cluster |
-| /kube/:cluster_id/pod/:pod_id | GET | Returns the details of a specific pod in a specific Kubernetes cluster |
-| /kube/:cluster_id/service | GET | Returns a list of all services in a specific Kubernetes cluster |
-| /kube/:cluster_id/service/:service_id | GET | Returns the details of a specific service in a specific Kubernetes cluster |
-| /kube/:cluster_id/namespace | GET | Returns a list of all namespaces in a specific Kubernetes cluster |
-| /kube/:cluster_id/namespace/:namespace_id | GET | Returns the details of a specific namespace in a specific Kubernetes cluster |
-| /kube/:cluster_id/deployment | GET | Returns a list of all deployments in a specific Kubernetes cluster |
-| /kube/:cluster_id/deployment/:deployment_id | GET | Returns the details of a specific deployment in a specific Kubernetes cluster |
-| /kube/:cluster_id/replicaset | GET | Returns a list of all replicasets in a specific Kubernetes cluster |
-| /kube/:cluster_id/replicaset/:replicaset_id | GET | Returns the details of a specific replicaset in a specific Kubernetes cluster |
-| /kube/:cluster_id/statefulset | GET | Returns a list of all statefulsets in a specific Kubernetes cluster |
-| /kube/:cluster_id/statefulset/:statefulset_id | GET | Returns the details of a specific statefulset in a specific Kubernetes cluster |
-| /kube/:cluster_id/daemonset | GET | Returns a list of all daemonsets in a specific Kubernetes cluster |
-| /kube/:cluster_id/daemonset/:daemonset_id | GET | Returns the details of a specific daemonset in a specific Kubernetes cluster |
-| /kube/:cluster_id/job | GET | Returns a list of all jobs in a specific Kubernetes cluster |
-| /kube/:cluster_id/job/:job_id | GET | Returns the details of a specific job in a specific Kubernetes cluster |
-| /kube/:cluster_id/cronjob | GET | Returns a list of all cronjobs in a specific Kubernetes cluster |
-| /kube/:cluster_id/cronjob/:cronjob_id | GET | Returns the details of a specific cronjob in a specific Kubernetes cluster |
-| /kube/:cluster_id/configmap | GET | Returns a list of all configmaps in a specific Kubernetes cluster |
-| /kube/:cluster_id/configmap/:configmap_id | GET | Returns the details of a specific configmap in a specific Kubernetes cluster |
-| /kube/:cluster_id/secret | GET | Returns a list of all secrets in a specific Kubernetes cluster |
-| /kube/:cluster_id/secret/:secret_id | GET | Returns the details of a specific secret in a specific Kubernetes cluster |
-| /kube/:cluster_id/ingress | GET | Returns a list of all ingress in a specific Kubernetes cluster |
-| /kube/:cluster_id/ingress/:ingress_id | GET | Returns the details of a specific ingress in a specific Kubernetes cluster |
-| /kube/:cluster_id/networkpolicy | GET | Returns a list of all networkpolicies in a specific Kubernetes cluster |
-| /kube/:cluster_id/networkpolicy/:networkpolicy_id | GET | Returns the details of a specific networkpolicy in a specific Kubernetes cluster |
-| /kube/:cluster_id/podsecuritypolicy | GET | Returns a list of all podsecuritypolicies in a specific Kubernetes cluster |
-| /kube/:cluster_id/podsecuritypolicy/:podsecuritypolicy_id | GET | Returns the details of a specific podsecuritypolicy in a specific Kubernetes cluster |
-| /kube/:cluster_id/storageclass | GET | Returns a list of all storageclasses in a specific Kubernetes cluster |
-| /kube/:cluster_id/storageclass/:storageclass_id | GET
+| Endpoint | Method | Description | Example |
+| --- | --- | --- | --- |
+| / | GET | Returns a success message and a value | 
+curl http://localhost:8555/
+ |
+| /kube | GET | Returns a list of all Kubernetes clusters | 
+curl http://localhost:8555/kube
+ |
+| /kube/:cluster | GET | Returns information about a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster
+ |
+| /kube/:cluster/pods | GET | Returns a list of all pods in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/pods
+ |
+| /kube/:cluster/deployments | GET | Returns a list of all deployments in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/deployments
+ |
+| /kube/:cluster/replicasets | GET | Returns a list of all replicasets in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/replicasets
+ |
+| /kube/:cluster/nodes | GET | Returns a list of all nodes in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/nodes
+ |
+| /kube/:cluster/services | GET | Returns a list of all services in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/services
+ |
+| /kube/:cluster/events | GET | Returns a list of all events in a specific Kubernetes cluster | 
+curl http://localhost:8555/kube/my-cluster/events
+ |
+| /hooks | POST | Receives a webhook and processes it | 
+curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks
+ |
