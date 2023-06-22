@@ -12,6 +12,12 @@ run:
 	@echo "Done!"
 	
 
+## deploy: this will deploy kube-o-matic to your kubernetes cluster using kubectl
+deploy:
+	@echo "Deploying Kube - o - matic..."
+	kubectl apply -k /manifests
+	@echo "Done!"
+
 ## BuildAndRun: builds and runs the docker image
 BuildAndRun:
 	@echo "Building Docker Image"
@@ -25,9 +31,9 @@ BuildAndRun:
 ## PullAndRun: pulls the docker image from Github Image Registry ghcr.io
 PullAndRun:
 	@echo "Pulling Docker image..."
-	docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic
+	docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic:main
 	@echo "Running the Cotainer..."
-	docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic
+	docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic:main
 	@echo "Done!"
 
 ## down: stops the docker container
