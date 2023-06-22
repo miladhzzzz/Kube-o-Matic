@@ -19,11 +19,13 @@ var (
 	HookController controllers.HookController
 	HookRouteController routes.HookRouteController
 
-	serviceName = "kubeomatic"
+	// serviceName = "kubeomatic"
 	server *gin.Engine
 )
 
 func init () {
+
+	os.Mkdir("/kubeconfig", 0755)
 
 	KubeController = controllers.NewKubeController()
 
