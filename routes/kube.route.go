@@ -3,7 +3,6 @@ package routes
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/miladhzzzz/kube-o-matic/controllers"
@@ -37,12 +36,6 @@ func (rc *KubeRouteController) KubeRoute(rg *gin.RouterGroup) {
 		log.Println(file.Filename)
 
 		folder := "/kubeconfig/" + file.Filename
-
-		err = os.MkdirAll(folder, 0755)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-			return
-		}
 
 		// Upload the file to specific dst.
 		err = c.SaveUploadedFile(file, folder)
