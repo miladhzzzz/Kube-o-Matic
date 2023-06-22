@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: kubeomatic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubeomatic
+  template:
+    metadata:
+      labels:
+        app: kubeomatic
+    spec:
+      containers:
+        - name: kubeomatic
+          image: ghcr.io/miladhzzzz/kube-o-matic:main
+          ports:
+            - containerPort: 8555
