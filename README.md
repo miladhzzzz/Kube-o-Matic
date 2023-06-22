@@ -55,6 +55,18 @@ make build
 make run
 ```
 
+#### Run in Kubernetes
+```shell
+# Use kubectl to deploy the manifests located at /Manifests
+kubectl apply -k /manifests 
+
+# Use Make to deploy
+make deploy
+
+# Inject Kube config
+cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c kind-kubeomatic -a http://localhost:8555
+```
+
 #### Run in Docker
 
 - Download from **Github packages** and run in docker.
@@ -64,8 +76,8 @@ make run
 make PullAndRun
 
 # IF you dont have the repository localy run :
-docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic
-docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic
+docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic:main
+docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic:main
 
 # Injecting KubeConfig
 cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c kind-kubeomatic -a http://localhost:8555
