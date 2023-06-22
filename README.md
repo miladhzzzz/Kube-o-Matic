@@ -67,6 +67,9 @@ make PullAndRun
 docker pull docker pull ghcr.io/miladhzzzz/kube-o-matic
 docker run -p 8555:8555 -d --name kube-o-matic ghcr.io/miladhzzzz/kube-o-matic
 
+# Injecting KubeConfig
+cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c kind-kubeomatic -a http://localhost:8555
+
 # DONT FORGET TO UPLOAD YOUR KUBECONFIG!
 
 ```
@@ -98,7 +101,7 @@ cd hack && chmod +x ./upload-kubeconfig.sh && ./upload-kubeconfig.sh -c <example
 
 - if your are on windows try this:
 ```shell
-curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfig" http://localhost/upload
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfig" http://localhost:8555/upload
 ```
 
 ## Usage
@@ -121,9 +124,14 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfi
 
 | Endpoint | Method | Description | Example |
 | --- | --- | --- | --- |
+| / | GET | Healthchecks | `curl http://localhost:8555/` |
+| /upload | POST | You Can Upload Your kubernetes configuration file | `curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/path/to/kubeconfig" http://localhost:8555/upload` |
+| /kube/clusters | GET | Returns a list of your kubernetes clusters based on kubeConfig files uploaded | `curl http://localhost:8555/kube/clusters` |
+| /kube/:cluster/:ns/pods | GET | Returns a list of all Pods in a specifig Cluster and Namespace | `curl http://localhost:8555/kube/kind-kubeomatic/default/pods` |
 | /kube/:cluster/deployments | GET | Returns a list of all deployments in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/deployments` |
 | /kube/:cluster/replicasets | GET | Returns a list of all replicasets in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/replicasets` |
 | /kube/:cluster/nodes | GET | Returns a list of all nodes in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/nodes` |
 | /kube/:cluster/services | GET | Returns a list of all services in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/services` |
 | /kube/:cluster/events | GET | Returns a list of all events in a specific Kubernetes cluster | `curl http://localhost:8555/kube/my-cluster/events` |
-| /hooks | POST | Receives a webhook and processes it | `curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks` |
+| /webhook/secret/:secret | GET | Sets your Webhook secret for GitOps Automation !REQUIRED! | `curl http://localhost:8555/webhook/secret/YOUR SECRET HERE`
+| /webhook | POST | Receives a webhook from your github repo and processes it(GitOps) | `curl -X POST -H "Content-Type: application/json" -d '{"cluster": "my-cluster", "pod": "my-pod", "namespace": "my-namespace"}' http://localhost:8555/hooks` |
